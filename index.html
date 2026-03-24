@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!-- Pixel Circle / Ellipse / Sphere Designer - Versão Modular FINAL com 3D -->
+<html lang="en" data-theme="light">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Pixel Circle Generator</title>
+    
+    <meta name="description" content="Interactive pixel circle / ellipse / sphere generator. 2D pixel art + 3D voxel mode.">
+    <meta name="keywords" content="pixel,circle,generator,minecraft,pixel circle generator, pixel art circle, ellipse, 3d voxel sphere">
+
+    <meta property="og:title" content="2D/3D Pixel Circle &amp; Sphere Generator">
+    <meta property="og:description" content="Create perfect 2D pixel circles/ellipses or 3D voxel spheres.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vinisouza128.github.io/pixel-circle-designer/">
+    
+    <meta name="robots" content="index, follow">
+    <meta name="google-site-verification" content="tWk0XqTqJEx0DmXenoD69pr9xXm-9cT386BGu6fEX54">
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b0b0f">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+
+    <link id="favicon" rel="icon" type="image/png" href="favicon_light.png">
+    <link rel="apple-touch-icon" href="favicon_light.png">
+</head>
+<body>
+
+<!-- HEADER (Portrait) -->
+<div id="header-area">
+  <div id="title-box">
+    <h1 id="h1p">
+      <span class="mode-word" id="modeToggle2D">
+        <span class="mw-letter" style="--i:0;">2</span>
+        <span class="mw-letter" style="--i:1;">D</span>
+      </span>
+      <span class="mode-word" id="modeToggleP">
+        <span class="mw-letter" style="--i:0;">C</span><span class="mw-letter" style="--i:1;">i</span><span class="mw-letter" style="--i:2;">r</span><span class="mw-letter" style="--i:3;">c</span><span class="mw-letter" style="--i:4;">l</span><span class="mw-letter" style="--i:5;">e</span>
+      </span>
+      Pixel Generator
+    </h1>
+  </div>
+</div>
+
+<div id="canvas-wrap">
+  <div id="canvas-frame">
+    <canvas id="c"></canvas>
+    <canvas id="three-canvas"></canvas>
+    
+    <div id="diam-overlay">
+      <span id="ov-diam"><span class="sym"></span><span id="ov-num"></span></span>
+      <span id="ov-rad"></span>
+    </div>
+
+    <div id="canvas-btns-tl">
+      <button class="c-btn surface active" id="btnTheme" title="Toggle light/dark">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="5"></line><line x1="12" y1="19" x2="12" y2="22"></line><line x1="2" y1="12" x2="5" y2="12"></line><line x1="19" y1="12" x2="22" y2="12"></line><line x1="4.9" y1="4.9" x2="7.1" y2="7.1"></line><line x1="16.9" y1="16.9" x2="19.1" y2="19.1"></line><line x1="19.1" y1="4.9" x2="16.9" y2="7.1"></line><line x1="4.9" y1="19.1" x2="7.1" y2="16.9"></line></svg>
+      </button>
+      <button class="c-btn surface active" id="btnGrid" title="Toggle grid">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="2"></rect><line x1="9" y1="2" x2="9" y2="22"></line><line x1="15" y1="2" x2="15" y2="22"></line><line x1="2" y1="9" x2="22" y2="9"></line><line x1="2" y1="15" x2="22" y2="15"></line></svg>
+      </button>
+    </div>
+
+    <div id="canvas-btns-tr">
+      <button class="c-btn surface" id="btnDownload" title="Download PNG">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="15"></line><polyline points="7,10 12,15 17,10"></polyline><line x1="4" y1="20" x2="20" y2="20"></line></svg>
+      </button>
+    </div>
+
+    <div id="canvas-btns-br">
+      <button class="c-btn surface" id="btnCenter" title="Toggle center guides">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="8"></line><line x1="12" y1="16" x2="12" y2="22"></line><line x1="2" y1="12" x2="8" y2="12"></line><line x1="16" y1="12" x2="22" y2="12"></line><circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"></circle></svg>
+      </button>
+      <div style="display:flex;gap:6px;">
+        <button class="c-btn surface" id="btnCircle" title="Perfect circle/ellipse overlay">
+          <svg width="20" height="20" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="13" cy="13" r="9"></circle></svg>
+        </button>
+        <button class="c-btn surface" id="btnZoom" title="Zoom top-left">
+          <svg width="20" height="20" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7.5"></circle><line x1="17" y1="17" x2="23.5" y2="23.5"></line><line x1="8.5" y1="11" x2="13.5" y2="11"></line><line x1="11" y1="8.5" x2="11" y2="13.5"></line></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="canvas-info">
+      <button id="info-btn" class="surface" title="Info">i</button>
+      <div id="info-chip" class="surface"></div>
+    </div>
+  </div>
+</div>
+
+<div id="gap-render"></div>
+<div id="render-row">
+  <label class="rnd-opt active" data-mode="filled"><span class="rnd-icon">●</span><span class="rnd-name">Filled</span><input type="radio" name="rmode" value="filled" checked hidden></label>
+  <label class="rnd-opt" data-mode="thin"><span class="rnd-icon">○</span><span class="rnd-name">Thin</span><input type="radio" name="rmode" value="thin" hidden></label>
+  <label class="rnd-opt" data-mode="thick"><span class="rnd-icon">◎</span><span class="rnd-name">Thick</span><input type="radio" name="rmode" value="thick" hidden></label>
+</div>
+<div id="gap1"></div>
+<div id="algo-row">
+  <label class="algo-opt active" data-algo="euclidean"><span class="algo-dot"></span><span class="algo-name">Euclidean</span><input type="radio" name="algo" value="euclidean" checked hidden></label>
+  <label class="algo-opt" data-algo="bresenham"><span class="algo-dot"></span><span class="algo-name">Bresenham</span><input type="radio" name="algo" value="bresenham" hidden></label>
+  <label class="algo-opt" data-algo="threshold"><span class="algo-dot"></span><span class="algo-name">Threshold</span><input type="radio" name="algo" value="threshold" hidden></label>
+</div>
+<div id="gap2"></div>
+
+<div id="diam-boxes-row">
+  <div class="diam-box" id="box-size">
+    <div class="diam-slider-wrap" id="sw-size">
+      <input class="diamRange" id="slSize" type="range" min="1" max="32" step="1" value="16">
+      <canvas class="thumb-canvas" id="tc-size"></canvas>
+    </div>
+    <span class="diam-label">Size</span>
+  </div>
+  <div class="diam-box" id="box-width" style="display:none;">
+    <div class="diam-slider-wrap" id="sw-width">
+      <input class="diamRange" id="slWidth" type="range" min="1" max="32" step="1" value="20">
+      <canvas class="thumb-canvas" id="tc-width"></canvas>
+    </div>
+    <span class="diam-label">Width</span>
+  </div>
+  <div class="diam-box" id="box-height" style="display:none;">
+    <div class="diam-slider-wrap" id="sw-height">
+      <input class="diamRange" id="slHeight" type="range" min="1" max="32" step="1" value="12">
+      <canvas class="thumb-canvas" id="tc-height"></canvas>
+    </div>
+    <span class="diam-label">Height</span>
+  </div>
+</div>
+
+<!-- Landscape Title -->
+<div id="title-box-ls">
+  <h1 id="h1-ls">
+    <span class="mode-word" id="modeToggle2D">
+      <span class="mw-letter" style="--i:0;">2</span>
+      <span class="mw-letter" style="--i:1;">D</span>
+    </span>
+    <span class="mode-word" id="modeToggleLS">
+      <span class="mw-letter" style="--i:0;">C</span><span class="mw-letter" style="--i:1;">i</span><span class="mw-letter" style="--i:2;">r</span><span class="mw-letter" style="--i:3;">c</span><span class="mw-letter" style="--i:4;">l</span><span class="mw-letter" style="--i:5;">e</span>
+    </span>
+    Pixel Generator
+  </h1>
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/algorithms.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/canvas.js"></script>
+<script src="js/threeD.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
